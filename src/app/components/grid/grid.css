@@ -1,0 +1,25 @@
+.grid {
+    display: grid;
+    gap: 1px;
+    margin: 20px auto;
+}
+
+.row {
+    display: flex;
+}
+
+.cell {
+    width: 20px;
+    height: 20px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    border: 1px solid #ddd;
+}
+
+.cell.alive {
+    background-color: #00ff00;
+}
+
+.cell.dead {
+    background-color: #ffffff;
+}
