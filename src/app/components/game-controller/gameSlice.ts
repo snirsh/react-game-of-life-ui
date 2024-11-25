@@ -42,6 +42,7 @@ const gameSlice = createSlice({
 				.fill(null)
 				.map(() => Array(GRID_SIZE).fill(false));
 			state.isRunning = false;
+			state.toggledCells = {};
 		},
 		tick: (state, payload: PayloadAction<{coords: Coord, active: boolean}[]>) => {
 			const toUpdate = payload.payload;
