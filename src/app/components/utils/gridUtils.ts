@@ -1,8 +1,14 @@
-import { GRID_SIZE, GridData } from '../game-controller/gameSlice.ts';
+import { GridData } from '../game-controller/gameSlice.ts';
+import { newModulo } from './mathUtil.ts';
 
 export type Coord = [number, number]
 export type ActiveNeighbors = Coord[]
 export type CellsToUpdate = {coords: Coord, active: boolean}[]
+
+const NEIGHBOR_COORDINATES = [
+	[-1, 0], [1, 0], [0, -1], [0, 1],
+	[-1, -1], [-1, 1], [1, -1], [1, 1]
+]
 
 export function updateToggledCells(gridData: GridData, row: number, col: number, toggledCells: {[key: string]: boolean}) {
 	if (gridData[row][col]) {
@@ -30,14 +36,8 @@ export function handleNeighbors(gridData: GridData, row: number, col: number ): 
 	return toUpdate;
 }
 
-const NEIGHBOR_COORDINATES = [
-	[-1, 0], [1, 0], [0, -1], [0, 1],
-	[-1, -1], [-1, 1], [1, -1], [1, 1]
-]
-
 export const getNeighbors =  (gridData: GridData, row: number, col: number, active: boolean) => {
 	return NEIGHBOR_COORDINATES.reduce<ActiveNeighbors>((acc, [rowOffset, colOffset]) => {
-		const newModulo = (n: number) => (((n) % GRID_SIZE) + GRID_SIZE) % GRID_SIZE;
 		const newRow = newModulo(row + rowOffset);
 		const newCol = newModulo(col + colOffset);
 		const isActive = gridData[newRow][newCol];

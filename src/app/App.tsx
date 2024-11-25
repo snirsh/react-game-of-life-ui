@@ -2,7 +2,7 @@ import { useGameController } from './components/game-controller/GameController';
 import { Grid } from './components/grid/Grid';
 
 export const App = () => {
-  const { gridData, isRunning, handleStart, handleStop, handleReset } = useGameController();
+  const { gridData, isRunning, handleStart, handleStop, handleReset, handleDot, handleBlock, handleGlider } = useGameController();
 
 	return (
 		<div className="App">
@@ -16,6 +16,15 @@ export const App = () => {
 					Stop
 				</button>
 				<button onClick={handleReset}>Reset</button>
+			</div>
+			<div className="examples-controls">
+				<button onClick={handleDot}>
+					Dot
+				</button>
+				<button onClick={handleBlock}>
+					Block
+				</button>
+				<button onClick={handleGlider}>Glider</button>
 			</div>
 		</div>
 	);

@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/store';
-import { resetGame, startGame, stopGame } from './gameSlice';
+import { changePattern, resetGame, startGame, stopGame } from './gameSlice';
 import { useGameRules } from './GameRules';
+import { BLOCK, DOT, GLIDER } from '../utils/examples.ts';
 
 export const useGameController = () => {
 	const dispatch = useAppDispatch();
@@ -20,6 +21,18 @@ export const useGameController = () => {
 		dispatch(resetGame());
 	};
 
+	const handleDot = () => {
+		dispatch(changePattern(DOT));
+	}
+
+	const handleBlock = () => {
+		dispatch(changePattern(BLOCK));
+	}
+
+	const handleGlider = () => {
+		dispatch(changePattern(GLIDER));
+	}
+
 	useEffect(() => {
 		let interval: NodeJS.Timeout | undefined;
 		if (isRunning) {
@@ -34,5 +47,5 @@ export const useGameController = () => {
 		};
 	}, [isRunning, dispatch, handleGameTick]);
 
-	return { gridData, isRunning, handleStart, handleStop, handleReset };
+	return { gridData, isRunning, handleStart, handleStop, handleReset, handleDot, handleBlock, handleGlider };
 };

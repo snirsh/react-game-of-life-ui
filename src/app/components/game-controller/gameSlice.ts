@@ -3,8 +3,9 @@ import {
 	Coord,
 	updateToggledCells,
 } from '../utils/gridUtils.ts';
+import { createExample, DOT } from '../utils/examples.ts';
 
-export const GRID_SIZE = 30;
+export const GRID_SIZE = 40;
 
 export type GridData = boolean[][];
 
@@ -12,6 +13,7 @@ interface GameState {
 	gridData: GridData;
 	isRunning: boolean;
 	toggledCells: {[key: string]: boolean}
+	selectedPattern: Coord[];
 }
 
 const initialState: GameState = {
@@ -19,7 +21,8 @@ const initialState: GameState = {
 		.fill(null)
 		.map(() => Array(GRID_SIZE).fill(false)),
 	isRunning: false,
-	toggledCells: {}
+	toggledCells: {},
+	selectedPattern: DOT
 };
 
 const gameSlice = createSlice({
@@ -28,8 +31,12 @@ const gameSlice = createSlice({
 	reducers: {
 		toggleCell: (state, action: PayloadAction<{ row: number; col: number }>) => {
 			const { row, col } = action.payload;
-			state.gridData[row][col] = !state.gridData[row][col];
-			updateToggledCells(state.gridData, row, col, state.toggledCells);
+			const { selectedPattern, gridData, toggledCells } = state;
+			const calculatedPattern = createExample(row, col, selectedPattern);
+			for (const [r, c] of calculatedPattern) {
+				gridData[r][c] = !gridData[r][c];
+				updateToggledCells(gridData, r, c, toggledCells);
+			}
 		},
 		startGame: (state) => {
 			state.isRunning = true;
@@ -43,6 +50,9 @@ const gameSlice = createSlice({
 				.map(() => Array(GRID_SIZE).fill(false));
 			state.isRunning = false;
 			state.toggledCells = {};
+		},
+		changePattern: (state, action: PayloadAction<Coord[]>) => {
+			state.selectedPattern = action.payload;
 		},
 		tick: (state, payload: PayloadAction<{coords: Coord, active: boolean}[]>) => {
 			const toUpdate = payload.payload;
@@ -58,6 +68,6 @@ const gameSlice = createSlice({
 	},
 });
 
-export const { toggleCell, startGame, stopGame, resetGame, tick } = gameSlice.actions;
+export const { toggleCell, startGame, stopGame, resetGame, changePattern, tick } = gameSlice.actions;
 
 export const gameReducer = gameSlice.reducer;
