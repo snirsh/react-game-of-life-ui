@@ -1,14 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Simulate } from 'react-dom/test-utils';
-import toggle = Simulate.toggle;
 import {
 	Coord,
-	handleActiveNeighbors,
-	handleNonActiveNeighbors,
 	updateToggledCells,
 } from '../utils/gridUtils.ts';
-
-export const toggledCells: {[key: string]: boolean} = {}
 
 export const GRID_SIZE = 30;
 
@@ -17,6 +11,7 @@ export type GridData = boolean[][];
 interface GameState {
 	gridData: GridData;
 	isRunning: boolean;
+	toggledCells: {[key: string]: boolean}
 }
 
 const initialState: GameState = {
@@ -24,6 +19,7 @@ const initialState: GameState = {
 		.fill(null)
 		.map(() => Array(GRID_SIZE).fill(false)),
 	isRunning: false,
+	toggledCells: {}
 };
 
 const gameSlice = createSlice({
@@ -33,7 +29,7 @@ const gameSlice = createSlice({
 		toggleCell: (state, action: PayloadAction<{ row: number; col: number }>) => {
 			const { row, col } = action.payload;
 			state.gridData[row][col] = !state.gridData[row][col];
-			updateToggledCells(state.gridData, row, col, toggledCells);
+			updateToggledCells(state.gridData, row, col, state.toggledCells);
 		},
 		startGame: (state) => {
 			state.isRunning = true;
@@ -47,20 +43,14 @@ const gameSlice = createSlice({
 				.map(() => Array(GRID_SIZE).fill(false));
 			state.isRunning = false;
 		},
-		tick: (state, payload) => {
-			const toUpdate: {coords: Coord, active: boolean}[] = []
-			for (const cell in toggledCells){
-				const [row, col] = cell.split('-').map(Number);
-				const toActivate = handleActiveNeighbors(state.gridData, row, col);
-				const toDeactivate = handleNonActiveNeighbors(state.gridData, row, col);
-				toUpdate.push(...toActivate, ...toDeactivate);
-			}
+		tick: (state, payload: PayloadAction<{coords: Coord, active: boolean}[]>) => {
+			const toUpdate = payload.payload;
 			for (const {coords, active} of toUpdate){
 				state.gridData[coords[0]][coords[1]] = active;
 				if(active){
-					toggledCells[`${coords[0]}-${coords[1]}`] = active;
+					state.toggledCells[`${coords[0]}-${coords[1]}`] = active;
 				} else {
-					delete toggledCells[`${coords[0]}-${coords[1]}`];
+					delete state.toggledCells[`${coords[0]}-${coords[1]}`];
 				}
 			}
 		},
