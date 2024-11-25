@@ -1,15 +1,6 @@
 import { Coord } from './gridUtils.ts';
 import { newModulo } from './mathUtil.ts';
 
-export const createStillLive = (row: number, col: number) => {
-	return createExample(row, col, BLOCK);
-}
-export const createOscillator = (row: number, col: number) => {
-	return createExample(row, col, BLINKER);
-}
-export const createGlider = (row: number, col: number) => {
-	return createExample(row, col, GLIDER);
-}
 
 export const DOT: Coord[] = [[0, 0]];
 

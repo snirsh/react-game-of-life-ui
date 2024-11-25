@@ -38,7 +38,7 @@ export const useGameController = () => {
 		if (isRunning) {
 			interval = setInterval(() => {
 				handleGameTick();
-			}, 100);
+			}, 50);
 		} else {
 			if (interval) clearInterval(interval);
 		}
