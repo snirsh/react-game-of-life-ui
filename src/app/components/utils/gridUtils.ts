@@ -2,6 +2,7 @@ import { GRID_SIZE, GridData } from '../game-controller/gameSlice.ts';
 
 export type Coord = [number, number]
 export type ActiveNeighbors = Coord[]
+export type CellsToUpdate = {coords: Coord, active: boolean}[]
 
 export function updateToggledCells(gridData: GridData, row: number, col: number, toggledCells: {[key: string]: boolean}) {
 	if (gridData[row][col]) {
@@ -11,8 +12,8 @@ export function updateToggledCells(gridData: GridData, row: number, col: number,
 	}
 }
 
-export function handleNeighbors(gridData: GridData, row: number, col: number ): { coords: Coord; active: boolean }[] {
-	const toUpdate: { coords: Coord; active: boolean }[] = [];
+export function handleNeighbors(gridData: GridData, row: number, col: number ): CellsToUpdate {
+	const toUpdate: CellsToUpdate = [];
 	const inActiveNeighbors = getNonActiveNeighbors(gridData, row, col);
 	for (const [nrow, ncol] of inActiveNeighbors) {
 		const activeNeightborOfNonActive = getActiveNeightbors(gridData, nrow, ncol);
