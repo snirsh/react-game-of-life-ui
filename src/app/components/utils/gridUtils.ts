@@ -37,14 +37,11 @@ const NEIGHBOR_COORDINATES = [
 
 export const getNeighbors =  (gridData: GridData, row: number, col: number, active: boolean) => {
 	return NEIGHBOR_COORDINATES.reduce<ActiveNeighbors>((acc, [rowOffset, colOffset]) => {
-		if (row + rowOffset < 0 || row + rowOffset >= GRID_SIZE) {
-			return acc;
-		}
-		if (col + colOffset < 0 || col + colOffset >= GRID_SIZE) {
-			return acc;
-		}
-		const isActive = gridData[row + rowOffset][col + colOffset];
-		if (isActive === active) acc.push([row + rowOffset, col + colOffset]);
+		const newModulo = (n: number) => (((n) % GRID_SIZE) + GRID_SIZE) % GRID_SIZE;
+		const newRow = newModulo(row + rowOffset);
+		const newCol = newModulo(col + colOffset);
+		const isActive = gridData[newRow][newCol];
+		if (isActive === active) acc.push([newRow, newCol]);
 		return acc;
 	}, [])
 }
