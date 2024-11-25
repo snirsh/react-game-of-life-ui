@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { tick } from './gameSlice';
-import { Coord, handleActiveNeighbors, handleNonActiveNeighbors } from '../utils/gridUtils.ts';
+import { Coord, handleNeighbors } from '../utils/gridUtils.ts';
 
 export const useGameRules = () => {
 	const dispatch = useAppDispatch();
@@ -10,9 +10,7 @@ export const useGameRules = () => {
 		const toUpdate: {coords: Coord, active: boolean}[] = []
 		for (const cell in toggledCells){
 			const [row, col] = cell.split('-').map(Number);
-			const toActivate = handleActiveNeighbors(gridData, row, col);
-			const toDeactivate = handleNonActiveNeighbors(gridData, row, col);
-			toUpdate.push(...toActivate, ...toDeactivate);
+			toUpdate.push(...handleNeighbors(gridData, row, col));
 		}
 		dispatch(tick(toUpdate));
 	};

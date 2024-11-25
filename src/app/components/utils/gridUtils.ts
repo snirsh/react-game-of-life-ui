@@ -11,16 +11,7 @@ export function updateToggledCells(gridData: GridData, row: number, col: number,
 	}
 }
 
-export function handleActiveNeighbors(gridData: GridData, row: number, col: number): { coords: Coord; active: boolean }[] {
-	const toUpdate: { coords: Coord; active: boolean }[] = [];
-	const activeNeighbors = getActiveNeightbors(gridData, row, col);
-	if (activeNeighbors.length < 2 || activeNeighbors.length > 3) {
-		toUpdate.push({ coords: [row, col], active: false });
-	}
-	return toUpdate;
-}
-
-export function handleNonActiveNeighbors(gridData: GridData, row: number, col: number ): { coords: Coord; active: boolean }[] {
+export function handleNeighbors(gridData: GridData, row: number, col: number ): { coords: Coord; active: boolean }[] {
 	const toUpdate: { coords: Coord; active: boolean }[] = [];
 	const inActiveNeighbors = getNonActiveNeighbors(gridData, row, col);
 	for (const [nrow, ncol] of inActiveNeighbors) {
@@ -29,6 +20,12 @@ export function handleNonActiveNeighbors(gridData: GridData, row: number, col: n
 			toUpdate.push({ coords: [nrow, ncol], active: true });
 		}
 	}
+
+	const activeNeighbors = getActiveNeightbors(gridData, row, col);
+	if (activeNeighbors.length < 2 || activeNeighbors.length > 3) {
+		toUpdate.push({ coords: [row, col], active: false });
+	}
+
 	return toUpdate;
 }
 
